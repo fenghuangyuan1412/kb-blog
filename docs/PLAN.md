@@ -24,7 +24,7 @@
 - [x] repo / service / middleware 单元测试（`scripts/test.ps1`，即 `go test -p 1 ./...`；两个测试包共用 kb 库，必须串行）
 - [x] `backend/scripts/seed.go`：四类内容 + 三层嵌套笔记 + 1 篇草稿（幂等，默认只允许 kb 开发库）
 - [x] `scripts/smoke.ps1` 冒烟：38 项全绿，0 失败，输出见 Day 1 简报
-- [~] tag `v0.1.0-day1` + 推送公开仓库
+- [x] tag `v0.1.0-day1` + 推送公开仓库 https://github.com/fenghuangyuan1412/kb-blog
 
 ## Day 2 —— 前端与阅读体验
 
