@@ -2,7 +2,8 @@
 # 依赖：go 1.22、docker、curl。
 
 GO      := go
-GOFLAGS := -C backend
+# -C 必须紧跟在 go 后面，所以放在命令位而不是末尾。
+GC      := -C backend
 DB_URL  ?= $(shell grep -m1 '^DATABASE_URL=' .env | cut -d= -f2-)
 ADDR    ?= :8080
 
@@ -22,41 +23,41 @@ db-create: ## 建库（本机便携实例用；Docker 起法会自动建库）
 	powershell -ExecutionPolicy Bypass -File scripts/db-create.ps1
 
 migrate-up: ## 应用全部迁移
-	$(GO) run $(GOFLAGS) ./cmd/migrate up
+	$(GO) $(GC) run ./cmd/migrate up
 
 migrate-down: ## 回滚一个版本
-	$(GO) run $(GOFLAGS) ./cmd/migrate down
+	$(GO) $(GC) run ./cmd/migrate down
 
 migrate-status: ## 查看迁移状态
-	$(GO) run $(GOFLAGS) ./cmd/migrate status
+	$(GO) $(GC) run ./cmd/migrate status
 
 seed: ## 灌入四类样例数据（幂等：先清空再写）
-	$(GO) run $(GOFLAGS) ./scripts/seed.go
+	$(GO) $(GC) run ./scripts
 
 run: ## 起后端服务
-	$(GO) run $(GOFLAGS) ./cmd/server
+	$(GO) $(GC) run ./cmd/server
 
 build: ## 编译后端二进制
-	$(GO) build $(GOFLAGS) -o bin/server.exe ./cmd/server
-	$(GO) build $(GOFLAGS) -o bin/migrate.exe ./cmd/migrate
+	$(GO) $(GC) build -o bin/server.exe ./cmd/server
+	$(GO) $(GC) build -o bin/migrate.exe ./cmd/migrate
 
-test: ## 跑单测
-	$(GO) test $(GOFLAGS) ./...
+test: ## 跑单测（-p 1：repo 与 service 共用 kb 开发库，不能并发）
+	$(GO) $(GC) test -p 1 -count=1 ./...
 
 vet: ## 静态检查
-	$(GO) vet $(GOFLAGS) ./...
+	$(GO) $(GC) vet ./...
 
 fmt: ## 格式化
-	$(GO) fmt $(GOFLAGS) ./...
+	$(GO) $(GC) fmt ./...
 
 tidy: ## 整理依赖
-	$(GO) mod tidy $(GOFLAGS)
+	$(GO) $(GC) mod tidy
 
 smoke: ## 冒烟：登录→建嵌套笔记→树→搜索→改→删
 	powershell -ExecutionPolicy Bypass -File scripts/smoke.ps1
 
 hashpw: ## 生成管理员密码哈希：make hashpw PW=xxx
-	$(GO) run $(GOFLAGS) ./cmd/kbhash "$(PW)"
+	$(GO) $(GC) run ./cmd/kbhash "$(PW)"
 
 frontend-dev: ## 起前端开发服务器
 	npm --prefix frontend run dev

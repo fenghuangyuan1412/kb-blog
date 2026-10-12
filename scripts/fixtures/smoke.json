@@ -1,0 +1,58 @@
+{
+  "root": {
+    "type": "note",
+    "slug": "smoke-testing",
+    "title": "冒烟：软件测试",
+    "summary": "这条记录由 scripts/smoke.ps1 创建，跑完会删掉。",
+    "content_md": "# 冒烟记录\n\n由冒烟脚本写入，用来验证嵌套笔记、中文全文检索和级联删除。",
+    "tags": ["冒烟", "测试"],
+    "status": "published",
+    "sort_order": 0
+  },
+  "child": {
+    "type": "note",
+    "slug": "smoke-black-box",
+    "title": "冒烟：黑盒用例设计",
+    "summary": "第二层。",
+    "content_md": "黑盒冒烟正文：等价类、边界值、判定表。",
+    "tags": ["冒烟", "用例设计"],
+    "status": "published",
+    "sort_order": 1
+  },
+  "leaf": {
+    "type": "note",
+    "slug": "smoke-equivalence",
+    "title": "冒烟：等价类划分",
+    "summary": "第三层，中文检索靠它命中。",
+    "content_md": "等价类划分冒烟正文：把输入域切分成有效类和无效类，每类挑一个代表值。",
+    "tags": ["冒烟", "用例设计"],
+    "status": "published",
+    "sort_order": 2
+  },
+  "draft": {
+    "type": "note",
+    "slug": "smoke-draft",
+    "title": "冒烟：草稿节点",
+    "summary": "草稿只有登录状态能看到。",
+    "content_md": "这篇是 draft，用来验证匿名请求看不到它。",
+    "tags": ["冒烟"],
+    "status": "draft",
+    "sort_order": 3
+  },
+  "illegal_parent": {
+    "type": "algorithm",
+    "slug": "smoke-algorithm",
+    "title": "冒烟：算法挂父节点",
+    "summary": "只有 note 能进笔记树。",
+    "content_md": "算法类内容带 parent_id 应该被拒绝。",
+    "tags": ["冒烟"]
+  },
+  "update": {
+    "title": "冒烟：等价类划分（已更新）",
+    "summary": "更新后的摘要。",
+    "content_md": "更新后的正文，用来验证 PUT 真的写进去了。",
+    "tags": ["冒烟", "用例设计", "已更新"]
+  },
+  "search_q": "等价类",
+  "cleanup_slugs": ["smoke-testing", "smoke-black-box", "smoke-equivalence", "smoke-draft", "smoke-algorithm"]
+}
