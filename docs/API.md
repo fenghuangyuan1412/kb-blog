@@ -57,7 +57,7 @@ Base URL：`http://localhost:8080`（生产环境同源由前端配置注入）
 ### 1.1 列表 / 查询
 
 ```
-GET /api/documents?type=&tag=&q=&page=&size=&include_draft=false
+GET /api/documents?type=&tag=&q=&page=&size=
 ```
 
 | 参数 | 说明 |
@@ -66,6 +66,8 @@ GET /api/documents?type=&tag=&q=&page=&size=&include_draft=false
 | `tag` | 单个标签，精确匹配 `tags` 数组包含 |
 | `q` | 全文搜索，走 `search_vec @@ to_tsquery('simple', ...)`；多词按 AND 组合，末词加前缀匹配 |
 | `page` / `size` | 见通用约定 |
+
+draft 是否出现由登录状态决定（带有效 Cookie 即管理员视角），不提供 `include_draft` 参数，避免给匿名请求开后门。
 
 响应 `200`：
 

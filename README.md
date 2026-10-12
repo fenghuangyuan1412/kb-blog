@@ -50,14 +50,23 @@ powershell -ExecutionPolicy Bypass -File scripts\hashpw.ps1 你的密码
 # 3) 跑迁移
 powershell -ExecutionPolicy Bypass -File scripts\migrate.ps1 up
 
-# 4) 灌样例数据
+# 4) 跑单测（会 TRUNCATE documents，所以放在灌数据之前）
+powershell -ExecutionPolicy Bypass -File scripts\test.ps1
+
+# 5) 灌样例数据
 powershell -ExecutionPolicy Bypass -File scripts\seed.ps1
 
-# 5) 起服务（默认 :8080）
+# 6) 起服务（默认 :8080）
 powershell -ExecutionPolicy Bypass -File scripts\run.ps1
 
-# 6) 另开一个终端，跑冒烟测试（登录→建嵌套笔记→树→搜索→改→删）
+# 7) 另开一个终端，跑冒烟测试（登录→建三层笔记→树→搜索→改→级联删→登出）
 powershell -ExecutionPolicy Bypass -File scripts\smoke.ps1
+```
+
+冒烟脚本需要管理员明文密码，只在运行时传入或交互输入，`.env` 里存的是 bcrypt 哈希：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\smoke.ps1 -Password 你的密码
 ```
 
 Linux / CI 用 make：`make db-up migrate-up seed run smoke test`。

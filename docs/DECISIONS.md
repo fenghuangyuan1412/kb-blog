@@ -109,3 +109,19 @@
 - 结论：(b)。`.env.example`、`scripts/hashpw.ps1` 的输出都按单引号形式给。
 - 理由：godotenv 是社区标准做法，问题只在写法约定；单引号是它明确的"不做插值"语法，成本最低。
 - 验证：`curl POST /api/auth/login` 从 500 变 200（见 Day 1 冒烟输出）。
+
+## D16 单测连真实开发库，包之间必须串行
+
+- 背景：全文检索、数组列、生成列这些行为 mock 不出来，仓库层和业务层测试只能连真库；
+  两者都靠 `TRUNCATE documents` 保证起点干净。
+- 选项：(a) 每包独立 schema 或独立数据库；(b) 共用 kb 开发库，用 `go test -p 1 ./...` 串行。
+- 结论：(b)，并在两个 setup 里写死守卫：库名不是 kb 直接 skip，CI 上设 `CI=true` 也 skip。
+- 理由：单人项目，多建库的成本大于收益；串行跑全套 1 秒内结束，没有性能压力。
+- 验证：不带 `-p 1` 时 `TestList_DraftVisibility` 等三条因互相清数据而失败，加上后全绿。
+
+## D17 seed 默认拒绝非 kb 库
+
+- 背景：`seed.go` 会先 `TRUNCATE documents RESTART IDENTITY CASCADE`，误指向别的库就是删数据。
+- 选项：(a) 只插不删（重复跑会 slug 冲突）；(b) 保持幂等清空，但库名不是 kb 就退出，`-force` 才放行。
+- 结论：(b)。样例数据要能反复重置，风险用一个显式开关挡住。
+- 验证：`go run ./scripts` 在 kb 上连跑两次结果一致（9 篇、草稿 1 篇、三层树）。

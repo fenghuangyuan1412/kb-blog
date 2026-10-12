@@ -15,16 +15,16 @@
 - [x] `docs/DATA_MODEL.md`
 - [x] `docs/DECISIONS.md`
 - [x] `docs/PLAN.md`（本文件）
-- [x] `scripts/{env,pg-init,pg-start,pg-stop,db-create}.ps1` + `Makefile` + `docker-compose.yml`
+- [x] `scripts/{env,pg-init,pg-start,pg-stop,db-create,migrate,run,seed,test,smoke,hashpw}.ps1` + `Makefile` + `docker-compose.yml`
 - [x] goose 迁移：`documents` 表 + `search_vec` 生成列 + 3 个索引
 - [x] 后端分层骨架：config / db / model / repo / service / handler / middleware / render + `/healthz`
 - [x] 读链路：列表（type/tag/q/page/size）、详情（含 children_count）、笔记树、标签、搜索
 - [x] 认证：登录 / 登出 / me（JWT HS256 + httpOnly Cookie）
 - [x] 写链路：create / update / delete / move，slug 冲突 409
-- [x] repo + service 单元测试（`go test ./...`）
-- [x] `backend/scripts/seed.go`：四类内容 + 三层嵌套笔记
-- [x] `scripts/smoke.ps1` 冒烟：全部跑通，输出见 Day 1 简报
-- [x] tag `v0.1.0-day1` + 推送公开仓库
+- [x] repo / service / middleware 单元测试（`scripts/test.ps1`，即 `go test -p 1 ./...`；两个测试包共用 kb 库，必须串行）
+- [x] `backend/scripts/seed.go`：四类内容 + 三层嵌套笔记 + 1 篇草稿（幂等，默认只允许 kb 开发库）
+- [x] `scripts/smoke.ps1` 冒烟：38 项全绿，0 失败，输出见 Day 1 简报
+- [~] tag `v0.1.0-day1` + 推送公开仓库
 
 ## Day 2 —— 前端与阅读体验
 
