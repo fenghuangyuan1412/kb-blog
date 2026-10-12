@@ -99,3 +99,13 @@
 - 背景：本机 `github.com` 直连失败，代理 `127.0.0.1:7890` 可用；这是用户机器网络环境，不是项目属性。
 - 结论：push 时用 `git -c http.proxy=http://127.0.0.1:7890 push ...`，不改仓库或全局 git 配置。
 - 理由：把个人网络环境写进仓库配置会污染他人/CI 的 clone。
+
+## D15 .env 里含 `$` 的值一律用单引号（bcrypt 哈希踩过坑）
+
+- 背景：Day 1 实测 `ADMIN_PASSWORD_HASH=$2a$10$...` 被 godotenv 解析成 51 个字符的残值，
+  登录直接 500（`crypto/bcrypt: hashedSecret too short`）。用 PowerShell 的 env.ps1 起服务时反而正常，
+  因为那是原样设置环境变量、不做插值。
+- 选项：(a) 换掉 godotenv 用标准库自己解析 .env；(b) 约定值里含 `$` 时用单引号包裹。
+- 结论：(b)。`.env.example`、`scripts/hashpw.ps1` 的输出都按单引号形式给。
+- 理由：godotenv 是社区标准做法，问题只在写法约定；单引号是它明确的"不做插值"语法，成本最低。
+- 验证：`curl POST /api/auth/login` 从 500 变 200（见 Day 1 冒烟输出）。

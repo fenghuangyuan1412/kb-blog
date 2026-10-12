@@ -12,4 +12,4 @@ if (-not $hash) { Write-Host 'hash generation failed' -ForegroundColor Red; exit
 
 Write-Host ''
 Write-Host 'copy this line into .env (never store the plaintext password):' -ForegroundColor Yellow
-Write-Host "ADMIN_PASSWORD_HASH=$hash"
+Write-Host "ADMIN_PASSWORD_HASH='$hash'"
