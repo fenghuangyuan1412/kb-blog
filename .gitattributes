@@ -1,0 +1,9 @@
+# 仓库内文本统一用 LF 入库，避免 Windows 换行把 diff 弄脏
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.ico binary
+
+# 本机脚本走 Windows 换行，内容保持纯 ASCII（中文提示会踩 GBK 解析坑）
+*.ps1 text eol=crlf

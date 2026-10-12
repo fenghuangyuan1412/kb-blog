@@ -1,0 +1,26 @@
+# 部署 / CI / 有 Docker 的机器用这个起本地 Postgres。
+# 本机（Windows，无 Docker）走 scripts/*.ps1 的便携版实例，见 docs/DECISIONS.md D2。
+# host 端口同样用 5433，保证 .env 里的 DATABASE_URL 两种起法都能直接用。
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: kb-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${PGUSER:-kb}
+      POSTGRES_PASSWORD: ${PGPASSWORD:?先在 .env 里设置 PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASE:-kb}
+      # 中文内容按 UTF-8 存，索引排序用 C 保持与便携实例一致
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    ports:
+      - "5433:5432"
+    volumes:
+      - kb_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PGUSER:-kb} -d ${PGDATABASE:-kb}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  kb_pgdata:
